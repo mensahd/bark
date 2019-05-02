@@ -25,6 +25,9 @@ class IDM : public BehaviorModel {
 
   virtual ~IDM() {}
 
+  // TODO(@hart): getNearestAgentOnPath(ego_agent) must have access to all other agents
+  // implementation either in ObservedWorld or here..
+
   double IDMModel(double v_ego, double v_other, double s);
 
   Trajectory Plan(float delta_time,

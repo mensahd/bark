@@ -52,26 +52,28 @@ dynamic::Trajectory behavior::IDM::Plan(
   using dynamic::StateDefinition::VEL_POSITION;
   using dynamic::StateDefinition::TIME_POSITION;
   using dynamic::StateDefinition::THETA_POSITION;
-  
+  using dynamic::Trajectory;
+  using dynamic::Sate;
+  using geometry::Point2d;
+  using geometry::Line;
+
   const int num_traj_time_points =
     this->get_params()->get_int("num_traj_time_points",
                                  "Vehicle length",
                                  100);
-  dynamic::Trajectory traj(num_traj_time_points,
-                           static_cast<int>(MIN_STATE_SIZE));
+
+  Trajectory traj(num_traj_time_points,
+                  static_cast<int>(MIN_STATE_SIZE));
 
   auto const sample_time = delta_time / num_traj_time_points;
-
-  dynamic::State ego_vehicle_state = observed_world.get_ego_state();
+  State ego_vehicle_state = observed_world.get_ego_state();
 
   // select state and get p0
-  geometry::Point2d pose(ego_vehicle_state(X_POSITION),
-                         ego_vehicle_state(Y_POSITION));
-
-
-  geometry::Line line =
+  Point2d pose(ego_vehicle_state(X_POSITION),
+               ego_vehicle_state(Y_POSITION));
+  Line line =
     observed_world.get_local_map()->get_driving_corridor().get_center();
-  
+
   // check whether linestring is empty
   if (line.obj_.size() > 0) {
     float s_start = get_nearest_s(line, pose);
@@ -81,7 +83,6 @@ dynamic::Trajectory behavior::IDM::Plan(
     // v = s/t
     double run_time = start_time;
     for (int i = 0; i < traj.rows(); i++) {
-
       // TODO(@hart): fill these using the local map
       double velocity_other = 10.0;
       double s = 10.0;
@@ -91,7 +92,7 @@ dynamic::Trajectory behavior::IDM::Plan(
       float del_s = ego_velocity * (run_time - start_time);
 
       // this pretty much should stay the same
-      geometry::Point2d traj_point = get_point_at_s(line, s_start + del_s);
+      Point2d traj_point = get_point_at_s(line, s_start + del_s);
       float traj_angle = get_tangent_angle_at_s(line, s_start + del_s);
       traj(i, TIME_POSITION) = run_time;
       traj(i, X_POSITION) =
@@ -101,10 +102,12 @@ dynamic::Trajectory behavior::IDM::Plan(
       traj(i, THETA_POSITION) = traj_angle;
       traj(i, VEL_POSITION) = ego_velocity;
 
-      // increasing time
+      // increase time
       run_time += sample_time;
     }
   }
+
+  // set and return the trajectory
   this->set_last_trajectory(traj);
   return traj;
 }
