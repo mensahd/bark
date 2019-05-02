@@ -19,14 +19,25 @@ double behavior::IDM::IDMModel(double v_ego, double v_other, double s) {
 
   // TODO(@hart): outsource these parameters as class members
   double v0, T, a, b, delta, s0, l;
-  v0 = 10.0;  // Desired velocity
-  T = 1.5;  // Safe time headway
-  a = 0.73;  // maximum acceleration
-  b = 1.67;  // Comfortable deceleration
-  delta = 4.0;  // Acceleration component
-  s0 = 2.0;  // Minimum distance
-  l = 5;  // Vehicle length
-
+  v0 = 10.0;  // TOD(@hart): Desired velocity
+  T = this->get_params()->get_real("T",
+                          "Safe time headway",
+                          1.5);
+  a = this->get_params()->get_real("a",
+                          "Maximum acceleration",
+                          0.73);
+  b = this->get_params()->get_real("b",
+                          "Comfortable deceleration",
+                          1.67);
+  delta = this->get_params()->get_real("delta",
+                              "Acceleration component",
+                              4.0);
+  s0 = this->get_params()->get_real("s0",
+                           "Minimum distance",
+                           2.0);
+  l = this->get_params()->get_real("l",
+                          "Vehicle length",
+                          5.0);
   double s_star = s0 + v_ego*T + v_ego*delta_v/(2*sqrt(a*b));
   double u = pow(v_ego/v0, delta);
   double w = pow(s_star/s, 2.0);
