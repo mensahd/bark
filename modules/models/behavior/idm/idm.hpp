@@ -4,8 +4,8 @@
 // For a copy, see <https://opensource.org/licenses/MIT>.
 
 
-#ifndef MODULES_MODELS_BEHAVIOR_CONSTANT_VELOCITY_CONSTANT_VELOCITY_HPP_
-#define MODULES_MODELS_BEHAVIOR_CONSTANT_VELOCITY_CONSTANT_VELOCITY_HPP_
+#ifndef MODULES_MODELS_BEHAVIOR_IDM_HPP_
+#define MODULES_MODELS_BEHAVIOR_IDM_HPP_
 
 #include "modules/models/behavior/behavior_model.hpp"
 #include "modules/world/world.hpp"
@@ -25,7 +25,7 @@ class IDM : public BehaviorModel {
 
   virtual ~IDM() {}
 
-  double IDMModel(double v_ego, double v_other);
+  double IDMModel(double v_ego, double v_other, double s);
 
   Trajectory Plan(float delta_time,
                  const ObservedWorld& observed_world);
@@ -41,4 +41,4 @@ inline BehaviorModel *IDM::Clone() const {
 }  // namespace models
 }  // namespace modules
 
-#endif  // MODULES_MODELS_BEHAVIOR_CONSTANT_VELOCITY_CONSTANT_VELOCITY_HPP_
+#endif  // MODULES_MODELS_BEHAVIOR_IDM_HPP_

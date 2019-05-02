@@ -12,8 +12,29 @@
 #include "modules/geometry/commons.hpp"
 #include "modules/models/dynamic/single_track.hpp"
 #include "modules/models/dynamic/integration.hpp"
+#include "modules/models/behavior/idm/idm.hpp"
+#include "modules/commons/params/default_params.hpp"
 
 TEST(idm_test, equations) {
+  using modules::models::behavior::IDM;
+  using modules::commons::DefaultParams;
+
+  DefaultParams params;
+  IDM idm(&params);
+  // the other vehicle is slower by 1 m/s
+  std::cout << idm.IDMModel(10.0, 9.0, 25.0) << std::endl;
+  // the other vehicle is faster by 1 m/s
+  std::cout << idm.IDMModel(10.0, 11.0, 25.0) << std::endl;
+  // the other vehicle is faster by 2 m/s
+  std::cout << idm.IDMModel(10.0, 12.0, 25.0) << std::endl;
+
+  // same but smaller s
+  std::cout << idm.IDMModel(10.0, 9.0, 10.0) << std::endl;
+  std::cout << idm.IDMModel(10.0, 11.0, 10.0) << std::endl;
+
+  // edge case
+  std::cout << idm.IDMModel(0.0, 0.0, 0.0) << std::endl;
+
 
 }
 

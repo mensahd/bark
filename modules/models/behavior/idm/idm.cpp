@@ -2,18 +2,37 @@
 //
 // This work is licensed under the terms of the MIT license.
 // For a copy, see <https://opensource.org/licenses/MIT>.
-
+#include <cmath>
 #include "modules/models/behavior/idm/idm.hpp"
 #include "modules/world/observed_world.hpp"
+#include "modules/commons/params/default_params.hpp"
 
 namespace modules {
 namespace models {
 
-double behavior::IDM::IDMModel(double v_ego, double v_other) {
-  double delta_v = v_other - v_ego;
-  double v0, T, a, b, delta, s0, l;
+double behavior::IDM::IDMModel(double v_ego, double v_other, double s) {
+  // avoid division by zero
+  if ( s == 0.0)
+    return 0.0;
 
-  return 0.0;
+  double delta_v = v_ego - v_other;
+
+  // TODO(@hart): outsource these parameters as class members
+  double v0, T, a, b, delta, s0, l;
+  v0 = 10.0;  // Desired velocity
+  T = 1.5;  // Safe time headway
+  a = 0.73;  // maximum acceleration
+  b = 1.67;  // Comfortable deceleration
+  delta = 4.0;  // Acceleration component
+  s0 = 2.0;  // Minimum distance
+  l = 5;  // Vehicle length
+
+  double s_star = s0 + v_ego*T + v_ego*delta_v/(2*sqrt(a*b));
+  double u = pow(v_ego/v0, delta);
+  double w = pow(s_star/s, 2.0);
+  double acceleration = a * (1.0 - u - w);
+
+  return acceleration;
 }
 
 dynamic::Trajectory behavior::IDM::Plan(
@@ -32,7 +51,7 @@ dynamic::Trajectory behavior::IDM::Plan(
 
   // select state and get p0
   geometry::Point2d pose(ego_vehicle_state(StateDefinition::X_POSITION),
-                          ego_vehicle_state(StateDefinition::Y_POSITION));
+                        ego_vehicle_state(StateDefinition::Y_POSITION));
 
 
   geometry::Line line =
@@ -46,14 +65,16 @@ dynamic::Trajectory behavior::IDM::Plan(
     // v = s/t
     double run_time = start_time;
     for (int i = 0; i < traj.rows(); i++) {
-      // TODO(@hart): here the calculation for the IDM has to take place
-      // NOTE(@hart): expect prediction interface
 
+      // TODO(@hart): fill these using the local map
       double velocity_other = 10.0;
-      double acceleration_ego = IDMModel(ego_velocity, velocity_other);
+      double s = 10.0;
+      double acceleration_ego = IDMModel(ego_velocity, velocity_other, s);
 
-      // TODO(@hart): do not need
+      // TODO(@hart): we need tripple integrator model to determin del_s
       float del_s = ego_velocity * (run_time - start_time);
+
+      // this pretty much should stay the same
       geometry::Point2d traj_point = get_point_at_s(line, s_start + del_s);
       float traj_angle = get_tangent_angle_at_s(line, s_start + del_s);
       traj(i, StateDefinition::TIME_POSITION) = run_time;
