@@ -30,7 +30,13 @@ class MotionPrimitives(OpenAI):
         self.params = params
         # todo: make parameterizable
         self.control_inputs = self.params["Runtime"]["RL"]["ActionWrapper"]["MotionPrimitives","Motion primitives available as discrete actions", \
-                                                        [[0,0], [10,0],[-2,0],[-50,0]]] # (acceleration, steering angle)
+                                                        [[50,-10],[50,0],[50,10], \
+                                                         [15,-5], [15,0],[15,5], \
+                                                         [5,-5],[5,0],[5,5], \
+                                                         [0,-5],[0,0], [0,6], \
+                                                         [-5,-5],[-5,0],[-5,5], \
+                                                         [-15,-5],[-15,0],[-15,5],\
+                                                         [-50,-10],[-50,0],[-50,10]]] # (acceleration, steering angle)
         self.behavior_model = None
 
     def reset(self, world, agents_to_act):

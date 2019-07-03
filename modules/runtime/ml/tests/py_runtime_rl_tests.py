@@ -32,10 +32,17 @@ class RuntimeRLTests(unittest.TestCase):
 
         for _ in range(0,5): # run 5 scenarios in a row, repeating after 3
             nn_state = runtimerl.reset()
-            for _ in range(0, 1000): # run each scenario for 10 steps
-                next_nn_state, reward, done, info = runtimerl.step(action_wrapper.action_space.sample())
+            i = 0;
+            actionsteps = []
+            for _ in range(0, 1000): # run each scenario for 1000 steps
+                actionstep = action_wrapper.action_space.sample()
+                next_nn_state, reward, done, info = runtimerl.step(actionstep)
+                actionsteps.append(actionstep)
+                i += 1
                 runtimerl.render()
                 if info["success"] or done:
+                    print("Finish in ", i)
+                    print("Actions taken:", actionsteps)
                     print("State: {} \n Reward: {} \n Done {}, Info: {} \n \
                          =================================================".format( next_nn_state, reward, done, info))
                     break
