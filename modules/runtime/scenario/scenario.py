@@ -38,6 +38,8 @@ class Scenario:
         param_server
         world = World(param_server)
         world = self.setup_map(world,self.map_file_name)
+        if len(self.eval_agent_ids) > 0:
+            world.controlled_agent = self.eval_agent_ids[0]
 
         for agent in self.agent_list:
             world.add_agent(agent)

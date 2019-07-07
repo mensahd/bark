@@ -24,7 +24,7 @@ using namespace modules::geometry;
 using namespace modules::world;
 
 void python_world(py::module m) {
-  py::class_<World, std::shared_ptr<World>>(m, "World")
+  py::class_<World, std::shared_ptr<World>>(m, "World", py::dynamic_attr())
     .def(py::init<Params *>())
     .def("__repr__", [](const World &a) {
       return "bark.world.World";

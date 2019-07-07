@@ -18,11 +18,12 @@ class GoalReached(StateEvaluator):
 
     def get_evaluation(self, world):
         eval_results = world.evaluate()
-        collision = eval_results["collision_agents"] or eval_results["collision_driving_corridor"]
+        agentCollision = eval_results["collision_agents"].split(',')
+        collision = (str(world.controlled_agent) in agentCollision) or eval_results["collision_driving_corridor"]
         success = eval_results["success"]
         reward = collision * self.collision_reward + success * self.goal_reward
         done = success or collision
-        info = {"success": success, "collision_agents": eval_results["collision_agents"], \
+        info = {"success": success, "collision_agents": collision, \
                  "collision_driving_corridor": eval_results["collision_driving_corridor"]}
         return reward, done, info
         

@@ -31,7 +31,7 @@ EvaluationReturn EvaluatorCollisionDrivingCorridor::Evaluate(const world::World 
     lane_inner = agent.second->get_local_map()->get_horizon_driving_corridor().get_inner();
     lane_outer = agent.second->get_local_map()->get_horizon_driving_corridor().get_outer();
 
-    if (Collide(poly_agent, lane_outer) || Collide(poly_agent, lane_inner))
+    if (Collide(poly_agent, lane_outer))// || Collide(poly_agent, lane_inner)) # Allow the agent to cross the centre line
     {
       colliding = true;
       break;

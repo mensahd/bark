@@ -19,7 +19,7 @@ class World;
 namespace evaluation
 {
 
-typedef boost::variant<float,bool> EvaluationReturn; 
+typedef boost::variant<float,bool,std::string> EvaluationReturn; 
 
 class BaseEvaluator 
 {

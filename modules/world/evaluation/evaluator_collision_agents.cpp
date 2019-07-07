@@ -6,6 +6,8 @@
 #include "modules/world/evaluation/evaluator_collision_agents.hpp"
 #include "modules/world/world.hpp"
 
+#include <string>
+
 namespace modules
 {
 namespace world
@@ -15,7 +17,7 @@ namespace evaluation
   EvaluationReturn EvaluatorCollisionAgents::Evaluate(const world::World& world) const {
     modules::geometry::Polygon poly_agent1;
     modules::geometry::Polygon poly_agent2;
-    bool colliding = false;
+    std::string colliding = "";
 
     for (auto agent_outer : world.get_agents()) {
       poly_agent1 = agent_outer.second->GetPolygonFromState(agent_outer.second->get_current_state());
@@ -25,12 +27,9 @@ namespace evaluation
 
         if (agent_inner.first != agent_outer.first) {
           if (Collide(poly_agent1, poly_agent2)) {
-            colliding = true;
-            break;
+            colliding += std::to_string(agent_inner.first) + ',' + std::to_string(agent_outer.first) + ',';
           }
         }
-        if (colliding == true)
-          break;
       }
     }
     return colliding;

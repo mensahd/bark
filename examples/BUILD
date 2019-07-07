@@ -29,6 +29,22 @@ py_test(
 )
 
 py_test(
+    name = "merge",
+    srcs = ["merge.py"],
+    data = ['//python:bark.so',
+            '//modules/runtime/tests:xodr_data'],
+    imports = ['../python/'],
+    deps = ["//modules/runtime/ml:ml",
+            "//modules/runtime/commons:parameters",
+            "//modules/runtime/commons:commons",
+            "//modules/runtime/scenario/scenario_generation:scenario_generation",
+            "//modules/runtime/commons:xodr_parser",
+            "//modules/runtime/commons:roadgraph_generator",
+            "//modules/runtime:runtime",],
+    visibility = ["//visibility:public"],
+)
+
+py_test(
   name = "scenario_generation_dump",
   srcs = ["scenario_generation_dump.py"],
   data = ['//python:bark.so',
