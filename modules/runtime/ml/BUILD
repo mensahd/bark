@@ -2,6 +2,7 @@ py_library(
     name = "ml",
     srcs = ["action_wrapper.py",
             "nn_state_observer.py",
+            "dqn.py",
             "state_evaluator.py",
             "runtime_rl.py",
             "tfa_wrapper.py"],

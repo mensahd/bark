@@ -12,4 +12,4 @@ sphinx
 recommonmark
 sphinx_rtd_theme
 gym
-tf-agents-nightly
+torch
